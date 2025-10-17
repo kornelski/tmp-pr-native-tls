@@ -14,7 +14,11 @@ features = ["alpn"]
 rustdoc-args = ["--cfg", "docsrs"]
 
 [features]
+default = ["openssl"]
+openssl = ["dep:openssl", "dep:openssl-sys"]
 vendored = ["openssl/vendored"]
+boring = ["dep:boring"]
+boring-fips = ["boring/fips"]
 alpn = ["security-framework/alpn"]
 
 [target.'cfg(target_vendor = "apple")'.dependencies]
@@ -30,9 +34,10 @@ schannel = "0.1.17"
 
 [target.'cfg(not(any(target_os = "windows", target_vendor = "apple")))'.dependencies]
 log = "0.4.5"
-openssl = "0.10.69"
-openssl-sys = "0.9.81"
+openssl = { version = "0.10.69", optional = true }
+openssl-sys = { version = "0.9.81", optional = true }
 openssl-probe = "0.1"
+boring = { version = "4", optional = true }
 
 [dev-dependencies]
 tempfile = "3.0"

@@ -103,10 +103,17 @@ use std::fmt;
 use std::io;
 use std::result;
 
-#[cfg_attr(target_vendor = "apple", path = "imp/security_framework.rs")]
-#[cfg_attr(target_os = "windows", path = "imp/schannel.rs")]
+#[cfg_attr(feature = "boring", path = "imp/boring.rs")]
 #[cfg_attr(
-    not(any(target_vendor = "apple", target_os = "windows")),
+    all(not(feature = "boring"), target_vendor = "apple"),
+    path = "imp/security_framework.rs"
+)]
+#[cfg_attr(
+    all(not(feature = "boring"), target_os = "windows"),
+    path = "imp/schannel.rs"
+)]
+#[cfg_attr(
+    not(any(target_vendor = "apple", target_os = "windows", feature = "boring")),
     path = "imp/openssl.rs"
 )]
 mod imp;
